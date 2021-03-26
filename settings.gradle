@@ -1,0 +1,4 @@
+rootProject.name = 'cdc-hibernate'
+
+include 'entity-event-api'
+include 'entity-event-hibernate'

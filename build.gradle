@@ -1,0 +1,47 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
+plugins {
+  id 'org.springframework.boot' version '2.3.2.RELEASE' apply(false)
+}
+
+allprojects {
+  group = 'com.github.sputnik906'
+}
+
+
+subprojects {
+
+  repositories {
+    mavenCentral()
+    jcenter()
+  }
+
+  apply from: "$rootDir/gradle/java.gradle"
+
+  apply plugin: 'io.spring.dependency-management'
+
+  dependencyManagement {
+    imports {
+      mavenBom SpringBootPlugin.BOM_COORDINATES
+    }
+  }
+
+  dependencies {
+
+    compileOnly("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok")
+
+    testCompileOnly("org.projectlombok:lombok")
+    testAnnotationProcessor("org.projectlombok:lombok")
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testImplementation("org.junit.jupiter:junit-jupiter-params")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine")
+
+  }
+
+  test {
+    systemProperty "file.encoding", "utf-8"
+    useJUnitPlatform()
+  }
+}
