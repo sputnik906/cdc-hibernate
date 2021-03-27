@@ -13,10 +13,10 @@ subprojects {
 
   repositories {
     mavenCentral()
-    jcenter()
   }
 
   apply from: "$rootDir/gradle/java.gradle"
+  apply from: "$rootDir/gradle/publish-central.gradle"
 
   apply plugin: 'io.spring.dependency-management'
 

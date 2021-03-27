@@ -1,0 +1,66 @@
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+
+task javadocJar(type: Jar) {
+  archiveClassifier.set('javadoc')
+  from javadoc
+}
+
+task sourcesJar(type: Jar) {
+  archiveClassifier.set('sources')
+  from sourceSets.main.allSource
+}
+
+artifacts {
+  archives javadocJar, sourcesJar
+}
+
+signing {
+  sign configurations.archives
+}
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        authentication(userName: findProperty('ossrhUsername'), password: findProperty('ossrhPassword'))
+      }
+
+      snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
+        authentication(userName: findProperty('ossrhUsername'), password: findProperty('ossrhPassword'))
+      }
+
+      pom.project {
+        name 'cdc-hibernate'
+        packaging 'jar'
+        // optionally artifactId can be defined here
+        description 'Change Data Capture for Hibernate'
+        url 'https://github.com/sputnik906/cdc-hibernate'
+
+        scm {
+          connection 'scm:git:git://git@github.com:sputnik906/cdc-hibernate.git'
+          developerConnection 'scm:git:ssh://git@github.com:sputnik906/cdc-hibernate.git'
+          url 'https://github.com/sputnik906/cdc-hibernate'
+        }
+
+        licenses {
+          license {
+            name 'The Apache License, Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+          }
+        }
+
+        developers {
+          developer {
+            id 'sputnik906'
+            name 'Vitaly Travin'
+            email 'sputnik906@gmail.com'
+          }
+        }
+      }
+    }
+  }
+}
